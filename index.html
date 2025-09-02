@@ -1,280 +1,445 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inventory Management</title>
-  <style>
-    /* Reset and basic styles */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f9;
-    }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inventory Management</title>
+  <style>
+    /* Reset and basic styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f9;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-    /* Navbar */
-    nav {
-      background-color: #202939;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      flex-wrap: wrap;
-    }
-    nav .nav-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    nav button, nav a {
-      background-color: #38425a;
-      border: none;
-      border-radius: 5px;
-      color: #d3d9f6;
-      font-weight: 600;
-      padding: 7px 15px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    nav button:hover, nav a:hover {
-      background-color: #556287;
-    }
-    nav .active {
-      background-color: #384a9a;
-      color: white;
-    }
+    /* Navbar */
+    nav {
+      background-color: #202939;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      flex-wrap: wrap;
+    }
+    nav .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    nav button, nav a {
+      background-color: #38425a;
+      border: none;
+      border-radius: 5px;
+      color: #d3d9f6;
+      font-weight: 600;
+      padding: 7px 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    nav button:hover, nav a:hover {
+      background-color: #556287;
+    }
+    nav .active {
+      background-color: #384a9a;
+      color: white;
+    }
 
-    nav .brand {
-      font-weight: bold;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    nav .brand img {
-      height: 28px;
-      width: 28px;
-    }
+    nav .brand {
+      font-weight: bold;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    nav .brand img {
+      height: 28px;
+      width: 28px;
+    }
 
-    /* Main content */
-    main {
-      max-width: 1100px;
-      margin: 20px auto 50px;
-      padding: 0 20px;
-    }
-    main h2 {
-      text-align: center;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-    }
+    /* Main content */
+    main {
+      max-width: 1100px;
+      margin: 20px auto 50px;
+      padding: 0 20px;
+    }
+    main h2 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
 
-    /* Search bar */
-    #searchInput {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto 30px auto;
+    /* Search bar */
+    #searchInput {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 30px auto;
+      display: block;
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    /* Product grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    /* Product card */
+    .product-card {
+      background: white;
+      padding: 15px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 1px 1px 4px rgb(0 0 0 / 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-card h3 {
+      margin: 8px 0;
+      font-size: 1.15rem;
+    }
+    .product-image {
+      max-width: 100%;
+      height: 150px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 6px;
+      background: #fafafa;
+      margin-bottom: 10px;
+    }
+    .price {
+      margin: 12px 0 16px;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+      color: white;
+      user-select: none;
+    }
+    .btn.add {
+      background-color: #28a745;
+    }
+    .btn.add:hover {
+      background-color: #218838;
+    }
+    .btn.remove {
+      background-color: #dc3545;
+    }
+    .btn.remove:hover {
+      background-color: #bd2130;
+    }
+
+    /* New Product Form */
+    .add-product-form {
+      display: none;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    .add-product-form.active {
       display: block;
-      padding: 12px 15px;
-      border-radius: 6px;
+    }
+    .add-product-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 1rem;
       box-sizing: border-box;
     }
-
-    /* Product grid */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    /* Product card */
-    .product-card {
-      background: white;
-      padding: 15px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 1px 1px 4px rgb(0 0 0 / 0.05);
+    .form-buttons {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
     }
-    .product-card h3 {
-      margin: 8px 0;
-      font-size: 1.15rem;
+    .form-buttons .btn {
+      padding: 10px 20px;
     }
-    .product-image {
-      max-width: 100%;
-      height: 150px;
-      object-fit: contain;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 6px;
-      background: #fafafa;
-      margin-bottom: 10px;
+    .form-buttons .btn.cancel {
+      background-color: #6c757d;
     }
-    .price {
-      margin: 12px 0 16px;
-      font-weight: 600;
+    .form-buttons .btn.cancel:hover {
+      background-color: #5a6268;
     }
 
-    /* Buttons */
-    .btn {
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 14px;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-      color: white;
-      user-select: none;
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
     }
-    .btn.add {
-      background-color: #28a745;
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        position: relative;
     }
-    .btn.add:hover {
-      background-color: #218838;
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
     }
-    .btn.remove {
-      background-color: #dc3545;
+    .close-btn:hover,
+    .close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
     }
-    .btn.remove:hover {
-      background-color: #bd2130;
-    }
-  </style>
+  </style>
 </head>
 <body>
 
-  <nav>
-    <div class="nav-links">
-      <button class="active">Home</button>
-      <button>Cart</button>
-      <button>Inventory</button>
-      <button>Sales</button>
-      <button>Add Product</button>
+  <nav>
+    <div class="nav-links">
+      <button id="homeBtn" class="active">Home</button>
+      <button id="addproductBtn">Add Product</button>
+    </div>
+    <div class="brand">
+      <span>Inventory Management</span>
+      <img src="https://cdn-icons-png.flaticon.com/512/3031/3031216.png" alt="Icon" />
+    </div>
+  </nav>
+
+  <main>
+    <div id="homePage">
+      <h2>Product Catalog</h2>
+      <input type="search" id="searchInput" placeholder="Search products..." />
+      <div id="productGrid" class="product-grid">
+              </div>
     </div>
-    <div class="brand">
-      <span>Inventory Management</span>
-      <img src="https://cdn-icons-png.flaticon.com/512/3031/3031216.png" alt="Icon" />
+
+    <div id="addProductForm" class="add-product-form">
+      <h2>Add a New Product</h2>
+      <form id="productForm">
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">Price</label>
+          <input type="number" id="productPrice" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="productImage">Image URL</label>
+          <input type="url" id="productImage" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn cancel">Cancel</button>
+          <button type="submit" class="btn add">Add Product</button>
+        </div>
+      </form>
     </div>
-  </nav>
+  </main>
 
-  <main>
-    <h2>Product Catalog</h2>
-    <input type="search" id="searchInput" placeholder="Search products..." />
+  <script>
+    // Sample product data
+    const products = [
+      {
+        id: 1,
+        name: "Sample Item",
+        price: 0.00,
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shopping_cart_font_awesome.svg/512px-Shopping_cart_font_awesome.svg.png"
+      },
+      {
+        id: 2,
+        name: "Macbook",
+        price: 200000.00,
+        image: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-spacegray-select-202206_GEO_IN?wid=904&hei=840&fmt=jpeg&qlt=80&.v=1653493200207"
+      },
+      {
+        id: 3,
+        name: "Sugar",
+        price: 50.00,
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Sugar_cane_and_brown_sugar.jpg"
+      },
+      {
+        id: 4,
+        name: "Dal",
+        price: 190.00,
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/28/Dal_variants.png"
+      },
+      {
+        id: 5,
+        name: "Aashirvaad Atta",
+        price: 500.00,
+        image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wheat_Flour_Packaged.jpg"
+      },
+      {
+        id: 6,
+        name: "Groundnut",
+        price: 400.00,
+        image: "https://upload.wikimedia.org/wikipedia/commons/6/64/Peanut_Seeds.JPG"
+      }
+    ];
 
-    <div id="productGrid" class="product-grid">
-      <!-- Product cards injected here by JS -->
-    </div>
-  </main>
+    // Cart Set to track product IDs added
+    const cart = new Set();
 
-  <script>
-    // Sample product data
-    const products = [
-      {
-        id: 1,
-        name: "Sample Item",
-        price: 0.00,
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shopping_cart_font_awesome.svg/512px-Shopping_cart_font_awesome.svg.png"
-      },
-      {
-        id: 2,
-        name: "Macbook",
-        price: 200000.00,
-        image: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-spacegray-select-202206_GEO_IN?wid=904&hei=840&fmt=jpeg&qlt=80&.v=1653493200207"
-      },
-      {
-        id: 3,
-        name: "Sugar",
-        price: 50.00,
-        image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Sugar_cane_and_brown_sugar.jpg"
-      },
-      {
-        id: 4,
-        name: "Dal",
-        price: 190.00,
-        image: "https://upload.wikimedia.org/wikipedia/commons/2/28/Dal_variants.png"
-      },
-      {
-        id: 5,
-        name: "Aashirvaad Atta",
-        price: 500.00,
-        image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wheat_Flour_Packaged.jpg"
-      },
-      {
-        id: 6,
-        name: "Groundnut",
-        price: 400.00,
-        image: "https://upload.wikimedia.org/wikipedia/commons/6/64/Peanut_Seeds.JPG"
-      }
-    ];
+    // DOM elements
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const homePage = document.getElementById('homePage');
+    const addProductForm = document.getElementById('addProductForm');
+    const homeBtn = document.getElementById('homeBtn');
+    const addproductBtn = document.getElementById('addproductBtn');
+    const productForm = document.getElementById('productForm');
+    const productNameInput = document.getElementById('productName');
+    const productPriceInput = document.getElementById('productPrice');
+    const productImageInput = document.getElementById('productImage');
+    const cancelBtn = document.querySelector('.btn.cancel');
 
-    // Cart Set to track product IDs added
-    const cart = new Set();
+    // Render products to the grid
+    function renderProducts(filter = '') {
+      productGrid.innerHTML = '';
+      const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(filter.toLowerCase())
+      );
 
-    // DOM elements
-    const productGrid = document.getElementById('productGrid');
-    const searchInput = document.getElementById('searchInput');
+      filteredProducts.forEach(product => {
+        const inCart = cart.has(product.id);
 
-    // Render products to the grid
-    function renderProducts(filter = '') {
-      productGrid.innerHTML = '';
-      const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(filter.toLowerCase())
-      );
+        const card = document.createElement('div');
+        card.className = 'product-card';
 
-      filteredProducts.forEach(product => {
-        const inCart = cart.has(product.id);
+        card.innerHTML = `
+          <h3>${product.name}</h3>
+          <img src="${product.image}" alt="${product.name}" class="product-image" />
+          <div class="price">Price: ₹ ${product.price.toFixed(2)}</div>
+          <button class="btn ${inCart ? 'remove' : 'add'}">
+            ${inCart ? 'Remove from Cart' : 'Add to Cart'}
+          </button>
+        `;
 
-        const card = document.createElement('div');
-        card.className = 'product-card';
+        // Handle button clicks
+        const button = card.querySelector('button');
+        button.addEventListener('click', () => {
+          if (cart.has(product.id)) {
+            cart.delete(product.id);
+          } else {
+            cart.add(product.id);
+          }
+          renderProducts(searchInput.value);
+        });
 
-        card.innerHTML = `
-          <h3>${product.name}</h3>
-          <img src="${product.image}" alt="${product.name}" class="product-image" />
-          <div class="price">Price: ₹ ${product.price.toFixed(2)}</div>
-          <button class="btn ${inCart ? 'remove' : 'add'}">
-            ${inCart ? 'Remove from Cart' : 'Add to Cart'}
-          </button>
-        `;
+        productGrid.appendChild(card);
+      });
 
-        // Handle button clicks
-        const button = card.querySelector('button');
-        button.addEventListener('click', () => {
-          if (cart.has(product.id)) {
-            cart.delete(product.id);
-          } else {
-            cart.add(product.id);
-          }
-          renderProducts(searchInput.value);
-        });
+      // Show message if no results
+      if (filteredProducts.length === 0) {
+        productGrid.innerHTML = '<p style="text-align:center; color:#777;">No products found.</p>';
+      }
+    }
 
-        productGrid.appendChild(card);
-      });
-
-      // Show message if no results
-      if (filteredProducts.length === 0) {
-        productGrid.innerHTML = '<p style="text-align:center; color:#777;">No products found.</p>';
-      }
+    // Function to switch views
+    function switchView(view) {
+        if (view === 'home') {
+            homePage.style.display = 'block';
+            addProductForm.style.display = 'none';
+            homeBtn.classList.add('active');
+            addproductBtn.classList.remove('active');
+        } else if (view === 'addProduct') {
+            homePage.style.display = 'none';
+            addProductForm.style.display = 'block';
+            homeBtn.classList.remove('active');
+            addproductBtn.classList.add('active');
+        }
     }
 
-    // Initial render
-    renderProducts();
+    // Initial render
+    renderProducts();
 
-    // Search input event
-    searchInput.addEventListener('input', (e) => {
-      renderProducts(e.target.value);
+    // Search input event
+    searchInput.addEventListener('input', (e) => {
+      renderProducts(e.target.value);
+    });
+
+    // Handle form submission
+    productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Get values from form inputs
+        const newProduct = {
+            id: products.length + 1, // Simple ID generation
+            name: productNameInput.value,
+            price: parseFloat(productPriceInput.value),
+            image: productImageInput.value
+        };
+
+        // Add the new product to the products array
+        products.push(newProduct);
+        
+        // Reset the form
+        productForm.reset();
+
+        // Switch back to the home page and re-render
+        switchView('home');
+        renderProducts();
     });
-  </script>
+
+    // Handle view switching
+    homeBtn.addEventListener('click', () => {
+        switchView('home');
+    });
+
+    addproductBtn.addEventListener('click', () => {
+        switchView('addProduct');
+    });
+
+    // Handle cancel button
+    cancelBtn.addEventListener('click', () => {
+      switchView('home');
+    });
+
+  </script>
 
 </body>
 </html>
-
